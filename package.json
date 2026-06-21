@@ -1,0 +1,22 @@
+{
+  "name": "shopy-store",
+  "version": "1.0.0",
+  "description": "Full Stack Flipkart Style Shopy Store ",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "browser-sync start --server 'public' --files 'public/**/*'",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.3.1",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "concurrently": "^8.2.2",
+    "browser-sync": "^3.0.2"
+  }
+}

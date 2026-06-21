@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOPY STORE - Best E-commerce Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="promo-ticker">
+        <div class="ticker-wrap">
+            <div class="ticker-item"><i class="fas fa-bolt"></i> Mega Flash Deal Active! Offers wrap up in: <span id="timer">44:59</span></div>
+            <div class="ticker-item"><i class="fas fa-truck"></i> Free Premium Shipping across India for orders above ₹499!</div>
+            <div class="ticker-item"><i class="fas fa-shield-halved"></i> 100% Secure Payment processing Gateway interface.</div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo"><i class="fas fa-shopping-bag"></i> SHOPY STORE</div>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for premium products, brands, cosmic categories..." onkeypress="handleSearchKeyPress(event)">
+            <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+        </div>
+
+        <div class="nav-links">
+            <span id="userDisplay" class="user-name"></span>
+            <button id="ordersBtn" class="nav-icon-btn" style="display:none;" onclick="toggleOrdersModal()"><i class="fas fa-box-open"></i> My Orders</button>
+            <button id="authBtn" onclick="toggleAuthModal()">Login</button>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cartCount">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="categories">
+        <button class="cat-btn active" onclick="filterCategory('all')"><i class="fas fa-border-all"></i> All Products</button>
+        <button class="cat-btn" onclick="filterCategory('Electronics')"><i class="fas fa-laptop"></i> Electronics</button>
+        <button class="cat-btn" onclick="filterCategory('Fashion')"><i class="fas fa-shirt"></i> Fashion</button>
+        <button class="cat-btn" onclick="filterCategory('Shoes')"><i class="fas fa-shoe-prints"></i> Shoes</button>
+        <button class="cat-btn" onclick="filterCategory('Kitchen')"><i class="fas fa-blender"></i> Kitchen</button>
+        <button class="cat-btn" onclick="filterCategory('Cosmetics')"><i class="fas fa-wand-magic-sparkles"></i> Cosmetics</button>
+        <button class="cat-btn" onclick="filterCategory('Toys')"><i class="fas fa-gamepad"></i> Toys</button>
+    </div>
+
+    <div class="deals-showcase-container">
+        <div class="deal-card highlight-glow"><i class="fas fa-fire"></i> FLAT 50% OFF - Clearance Sale Matrix Active</div>
+        <div class="deal-card neon-pulse"><i class="fas fa-star"></i> RuPay / HDFC Bank Users Get Extra 10% Instant Cashbacks</div>
+    </div>
+
+    <main class="products-container" id="productsGrid"></main>
+
+    <div class="modal" id="authModal">
+        <div class="modal-content animate-pop">
+            <span class="close-btn" onclick="closeModal('authModal')">&times;</span>
+            <div class="form-container">
+                <h2 id="modalTitle" class="gradient-text">Account Login</h2>
+                <div id="authFields">
+                    <input type="text" id="authUsername" placeholder="Username" required>
+                    <input type="password" id="authPassword" placeholder="Password" required>
+                </div>
+                <button class="main-btn" onclick="handleAuth()">Proceed Secured Session</button>
+                <div class="toggle-link" id="toggleText" onclick="switchAuthMode()">Don't have an account? Register</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="paymentModal">
+        <div class="modal-content animate-pop">
+            <span class="close-btn" onclick="closePayment()">&times;</span>
+            <div class="form-container">
+                <h2 class="gradient-text"><i class="fas fa-truck-ramp-box"></i> Shipping Details</h2>
+                <input type="text" id="payName" placeholder="Full Delivery Receiver Name" required>
+                <input type="text" id="payPhone" placeholder="10-Digit Active Mobile Contact Number" maxlength="10" required>
+                <input type="text" id="payAddress" placeholder="Flat, House No, Street Address, City" required>
+                <input type="text" id="payPincode" placeholder="6-Digit Area Postal Pincode" maxlength="6" required>
+                
+                <h3>Select Smart Settlement Protocol</h3>
+                <div class="payment-methods">
+                    <label class="radio-label"><input type="radio" name="payMethod" value="COD" checked> Cash On Delivery (COD)</label>
+                    <label class="radio-label"><input type="radio" name="payMethod" value="UPI"> Google Pay / Secure PhonePe Node (UPI)</label>
+                </div>
+                
+                <div class="amount-paying">Total Outstanding Balance: <strong>₹<span id="paymentAmount">0</span></strong></div>
+                <button class="main-btn" style="background:var(--orange);" onclick="processPayment()">Authorize Complete Order</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="gpayModal" style="z-index: 3000;">
+        <div class="modal-content animate-pop" style="text-align:center; max-width:350px;">
+            <div class="gpay-logo-wrapper">
+                <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span><span class="g-pay">Pay</span>
+            </div>
+            <div class="spinner-ring"></div>
+            <p style="margin-top:20px; font-weight:500; color:#5f6368; font-size:14px;">Contacting your bank secure servers via UPI node...</p>
+            <p style="font-size:12px; color:#999; margin-top:5px;">Do not click back button or refresh window grid.</p>
+        </div>
+    </div>
+
+    <div class="modal" id="ordersModal">
+        <div class="modal-content animate-pop" style="max-width: 580px;">
+            <span class="close-btn" onclick="toggleOrdersModal()">&times;</span>
+            <h2 class="gradient-text" style="margin-bottom:15px;"><i class="fas fa-receipt"></i> Your Verified Purchases</h2>
+            <div id="ordersContainer" style="max-height:65vh; overflow-y:auto; padding-right:5px;"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="productModal"><div class="modal-content animate-pop" id="productModalBody"></div></div>
+
+    <div class="sidebar" id="cartSidebar">
+        <div class="sidebar-header">
+            <h3>Your Cart Bucket</h3>
+            <i class="fas fa-times" style="cursor:pointer; font-size:20px;" onclick="toggleCart()"></i>
+        </div>
+        <div id="cartItems"></div>
+        <div class="sidebar-footer">
+            <h3 style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>Subtotal:</span> <span>₹<span id="cartTotal">0</span></span></h3>
+            <button class="checkout-btn" onclick="openPayment(false)">Secure Checkout Grid</button>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
